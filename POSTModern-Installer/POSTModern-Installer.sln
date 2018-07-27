@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "POSTModern-Installer", "POSTModern-Installer\POSTModern-Installer.vdproj", "{B5F5072A-2425-4F07-B561-8E26F6E59FA9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Default = Debug|Default
+		Release|Default = Release|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B5F5072A-2425-4F07-B561-8E26F6E59FA9}.Debug|Default.ActiveCfg = Debug
+		{B5F5072A-2425-4F07-B561-8E26F6E59FA9}.Debug|Default.Build.0 = Debug
+		{B5F5072A-2425-4F07-B561-8E26F6E59FA9}.Release|Default.ActiveCfg = Release
+		{B5F5072A-2425-4F07-B561-8E26F6E59FA9}.Release|Default.Build.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {15D34BDC-8FC0-45A7-B07B-1861113D8333}
+	EndGlobalSection
+EndGlobal
