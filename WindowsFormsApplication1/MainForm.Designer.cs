@@ -38,12 +38,12 @@
             this.EncodingDropdown = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.IncludeOrderedPOSTagsCheckbox = new System.Windows.Forms.CheckBox();
             this.NormalizeOutputCheckbox = new System.Windows.Forms.CheckBox();
             this.SavePOStextCheckbox = new System.Windows.Forms.CheckBox();
             this.ModelSelectionBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.IncludeOrderedPOSTagsCheckbox = new System.Windows.Forms.CheckBox();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -143,6 +143,17 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Input / Output Options";
             // 
+            // IncludeOrderedPOSTagsCheckbox
+            // 
+            this.IncludeOrderedPOSTagsCheckbox.AutoSize = true;
+            this.IncludeOrderedPOSTagsCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IncludeOrderedPOSTagsCheckbox.Location = new System.Drawing.Point(8, 213);
+            this.IncludeOrderedPOSTagsCheckbox.Name = "IncludeOrderedPOSTagsCheckbox";
+            this.IncludeOrderedPOSTagsCheckbox.Size = new System.Drawing.Size(228, 24);
+            this.IncludeOrderedPOSTagsCheckbox.TabIndex = 15;
+            this.IncludeOrderedPOSTagsCheckbox.Text = "Include ordered POS Tags";
+            this.IncludeOrderedPOSTagsCheckbox.UseVisualStyleBackColor = true;
+            // 
             // NormalizeOutputCheckbox
             // 
             this.NormalizeOutputCheckbox.AutoSize = true;
@@ -193,17 +204,6 @@
             // 
             this.openFileDialog.FileName = "DictionaryFile.txt";
             this.openFileDialog.Filter = "Dictionary Files|*.dic";
-            // 
-            // IncludeOrderedPOSTagsCheckbox
-            // 
-            this.IncludeOrderedPOSTagsCheckbox.AutoSize = true;
-            this.IncludeOrderedPOSTagsCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IncludeOrderedPOSTagsCheckbox.Location = new System.Drawing.Point(8, 213);
-            this.IncludeOrderedPOSTagsCheckbox.Name = "IncludeOrderedPOSTagsCheckbox";
-            this.IncludeOrderedPOSTagsCheckbox.Size = new System.Drawing.Size(228, 24);
-            this.IncludeOrderedPOSTagsCheckbox.TabIndex = 15;
-            this.IncludeOrderedPOSTagsCheckbox.Text = "Include ordered POS Tags";
-            this.IncludeOrderedPOSTagsCheckbox.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
