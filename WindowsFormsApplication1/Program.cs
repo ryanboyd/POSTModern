@@ -17,7 +17,7 @@ namespace WindowsFormsApplication1
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            Application.Run(new RIOTLite.Splash());
+            Application.Run(new POSTModern.Splash());
 
             Application.Run(new Form1());
         }

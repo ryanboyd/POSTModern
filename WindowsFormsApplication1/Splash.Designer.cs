@@ -1,4 +1,4 @@
-﻿namespace RIOTLite
+﻿namespace POSTModern
 {
     partial class Splash
     {
@@ -61,7 +61,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(246, 33);
             this.label1.TabIndex = 1;
-            this.label1.Text = "POSTModern v0.971";
+            this.label1.Text = "POSTModern v0.980";
             this.label1.UseWaitCursor = true;
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 

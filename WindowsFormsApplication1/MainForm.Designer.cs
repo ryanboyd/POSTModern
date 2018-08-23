@@ -43,6 +43,7 @@
             this.ModelSelectionBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.IncludeOrderedPOSTagsCheckbox = new System.Windows.Forms.CheckBox();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -124,6 +125,7 @@
             // groupBox2
             // 
             this.groupBox2.BackColor = System.Drawing.Color.Transparent;
+            this.groupBox2.Controls.Add(this.IncludeOrderedPOSTagsCheckbox);
             this.groupBox2.Controls.Add(this.NormalizeOutputCheckbox);
             this.groupBox2.Controls.Add(this.SavePOStextCheckbox);
             this.groupBox2.Controls.Add(this.ModelSelectionBox);
@@ -147,7 +149,7 @@
             this.NormalizeOutputCheckbox.Checked = true;
             this.NormalizeOutputCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.NormalizeOutputCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NormalizeOutputCheckbox.Location = new System.Drawing.Point(8, 228);
+            this.NormalizeOutputCheckbox.Location = new System.Drawing.Point(8, 244);
             this.NormalizeOutputCheckbox.Name = "NormalizeOutputCheckbox";
             this.NormalizeOutputCheckbox.Size = new System.Drawing.Size(283, 24);
             this.NormalizeOutputCheckbox.TabIndex = 14;
@@ -192,6 +194,17 @@
             this.openFileDialog.FileName = "DictionaryFile.txt";
             this.openFileDialog.Filter = "Dictionary Files|*.dic";
             // 
+            // IncludeOrderedPOSTagsCheckbox
+            // 
+            this.IncludeOrderedPOSTagsCheckbox.AutoSize = true;
+            this.IncludeOrderedPOSTagsCheckbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IncludeOrderedPOSTagsCheckbox.Location = new System.Drawing.Point(8, 213);
+            this.IncludeOrderedPOSTagsCheckbox.Name = "IncludeOrderedPOSTagsCheckbox";
+            this.IncludeOrderedPOSTagsCheckbox.Size = new System.Drawing.Size(228, 24);
+            this.IncludeOrderedPOSTagsCheckbox.TabIndex = 15;
+            this.IncludeOrderedPOSTagsCheckbox.Text = "Include ordered POS Tags";
+            this.IncludeOrderedPOSTagsCheckbox.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -233,6 +246,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox SavePOStextCheckbox;
         private System.Windows.Forms.CheckBox NormalizeOutputCheckbox;
+        private System.Windows.Forms.CheckBox IncludeOrderedPOSTagsCheckbox;
     }
 }
 

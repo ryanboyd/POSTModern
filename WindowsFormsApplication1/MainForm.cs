@@ -108,6 +108,7 @@ namespace WindowsFormsApplication1
                         DictData.OutputFileLocation = saveFileDialog.FileName;
                         DictData.SelectedModel = ModelSelectionBox.SelectedItem.ToString();
                         DictData.OutputTaggedText = SavePOStextCheckbox.Checked;
+                        DictData.OrderedPOSTagText = IncludeOrderedPOSTagsCheckbox.Checked;
                         DictData.NormalizeOutput = NormalizeOutputCheckbox.Checked;
 
                         if (DictData.OutputFileLocation != "") {
@@ -118,6 +119,7 @@ namespace WindowsFormsApplication1
                             EncodingDropdown.Enabled = false;
                             ModelSelectionBox.Enabled = false;
                             SavePOStextCheckbox.Enabled = false;
+                            IncludeOrderedPOSTagsCheckbox.Enabled = false;
                             NormalizeOutputCheckbox.Enabled = false;
 
                             BgWorker.RunWorkerAsync(DictData);
@@ -207,6 +209,7 @@ namespace WindowsFormsApplication1
                         HeaderString.Append("\"Filename\",\"TokenCount\",\"SentenceCount\"," + string.Join(",", tags_list_header.ToArray()));
 
                         if (DictData.OutputTaggedText) HeaderString.Append(",\"TaggedText\"");
+                        if (DictData.OrderedPOSTagText) HeaderString.Append(",\"OrderedPOSTags\"");
 
                         outputFile.WriteLine(HeaderString.ToString());
                 
@@ -238,6 +241,7 @@ namespace WindowsFormsApplication1
                             int TotalWC = 0;
 
                             StringBuilder TaggedText = new StringBuilder();
+                            StringBuilder OrderedPOSTags = new StringBuilder();
 
 
                             //     _                _                 _____         _   
@@ -253,6 +257,8 @@ namespace WindowsFormsApplication1
 
                                 if (DictData.OutputTaggedText) TaggedText.Append(taggedSentence.ToString() + " ");
 
+                              
+ 
                                 Iterator it = taggedSentence.iterator();
 
                                 while (it.hasNext())
@@ -260,6 +266,9 @@ namespace WindowsFormsApplication1
 
 
                                     TaggedWord token = (TaggedWord)it.next();
+
+                                    if (DictData.OrderedPOSTagText) OrderedPOSTags.Append(token.tag() + " ");
+
 
                                     POSSums[token.tag()] += 1;
                                     TotalWC += 1;
@@ -293,9 +302,11 @@ namespace WindowsFormsApplication1
                             OutputString[2] = TotalSentences.ToString();
 
                             int include_tagged_text = 0;
+                            int include_ordered_pos = 0;
                             if (DictData.OutputTaggedText) include_tagged_text = 1;
+                            if (DictData.OrderedPOSTagText) include_ordered_pos = 1;
 
-                            string[] TagOutputString = new string[NumberOfTagsInModel + include_tagged_text];
+                            string[] TagOutputString = new string[NumberOfTagsInModel + include_tagged_text + include_ordered_pos];
 
                             for(int i = 0; i < NumberOfTagsInModel; i++)
                             {
@@ -310,8 +321,8 @@ namespace WindowsFormsApplication1
                                         
                             }
 
-                            if (DictData.OutputTaggedText) TagOutputString[TagOutputString.Length - 1] = "\"" +TaggedText.ToString().Replace("\"", "\"\"") + "\"";
-
+                            if (DictData.OutputTaggedText) TagOutputString[TagOutputString.Length - include_tagged_text - include_ordered_pos] = "\"" +TaggedText.ToString().Replace("\"", "\"\"") + "\"";
+                            if (DictData.OrderedPOSTagText) TagOutputString[TagOutputString.Length - include_ordered_pos] = "\"" + OrderedPOSTags.ToString().Replace("\"", "\"\"") + "\"";
 
                             outputFile.WriteLine(String.Join(",", MergeOutputArrays(OutputString, TagOutputString)));
 
@@ -348,6 +359,7 @@ namespace WindowsFormsApplication1
             EncodingDropdown.Enabled = true;
             ModelSelectionBox.Enabled = true;
             SavePOStextCheckbox.Enabled = true;
+            IncludeOrderedPOSTagsCheckbox.Enabled = true;
             NormalizeOutputCheckbox.Enabled = true;
             FilenameLabel.Text = "Finished!";
             MessageBox.Show("POSTModern has finished analyzing your texts.", "Analysis Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -366,6 +378,7 @@ namespace WindowsFormsApplication1
             public string OutputFileLocation { get; set; }
             public string SelectedModel { get; set; }
             public bool OutputTaggedText { get; set; }
+            public bool OrderedPOSTagText { get; set; }
             public bool NormalizeOutput { get; set; }
 
         }
