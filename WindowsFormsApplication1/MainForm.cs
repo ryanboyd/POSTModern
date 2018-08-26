@@ -268,7 +268,7 @@ namespace WindowsFormsApplication1
 
                                     TaggedWord token = (TaggedWord)it.next();
 
-                                    if (DictData.OutputTaggedText) TaggedText.Append(token.toString() + "/" + token.tag() + " ");
+                                    if (DictData.OutputTaggedText) TaggedText.Append(token.toString() + " ");
                                     if (DictData.OrderedPOSTagText) OrderedPOSTags.Append(token.tag() + " ");
 
 
