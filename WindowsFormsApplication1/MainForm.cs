@@ -255,11 +255,12 @@ namespace WindowsFormsApplication1
                                 {
                                 var taggedSentence = tagger.tagSentence(sentence);
 
-                                if (DictData.OutputTaggedText) TaggedText.Append(taggedSentence.ToString() + " ");
 
-                              
+                                Iterator it = taggedSentence.iterator();                           
+
+                                  
  
-                                Iterator it = taggedSentence.iterator();
+                                
 
                                 while (it.hasNext())
                                 {
@@ -267,6 +268,7 @@ namespace WindowsFormsApplication1
 
                                     TaggedWord token = (TaggedWord)it.next();
 
+                                    if (DictData.OutputTaggedText) TaggedText.Append(token.toString() + "/" + token.tag() + " ");
                                     if (DictData.OrderedPOSTagText) OrderedPOSTags.Append(token.tag() + " ");
 
 
@@ -278,7 +280,10 @@ namespace WindowsFormsApplication1
 
                                 }
 
-                            }
+                                TaggedText.Append(Environment.NewLine);
+                                OrderedPOSTags.Append(Environment.NewLine);
+
+                        }
 
 
 
