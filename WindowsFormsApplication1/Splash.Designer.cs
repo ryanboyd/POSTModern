@@ -42,10 +42,9 @@
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Image = global::POSTModern.Properties.Resources.rene_magrite_treason_of_images;
             this.pictureBox1.InitialImage = global::POSTModern.Properties.Resources.rene_magrite_treason_of_images;
-            this.pictureBox1.Location = new System.Drawing.Point(-48, 23);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.pictureBox1.Location = new System.Drawing.Point(-36, 19);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(494, 248);
+            this.pictureBox1.Size = new System.Drawing.Size(371, 202);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -56,12 +55,11 @@
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(79, 288);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(59, 234);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(246, 33);
+            this.label1.Size = new System.Drawing.Size(191, 26);
             this.label1.TabIndex = 1;
-            this.label1.Text = "POSTModern v0.981";
+            this.label1.Text = "POSTModern v0.990";
             this.label1.UseWaitCursor = true;
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
@@ -69,10 +67,9 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Calibri", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(115, 330);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(86, 268);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(170, 21);
+            this.label2.Size = new System.Drawing.Size(126, 15);
             this.label2.TabIndex = 2;
             this.label2.Text = "by Ryan L. Boyd, Ph.D.";
             this.label2.UseWaitCursor = true;
@@ -85,10 +82,10 @@
             // 
             // Splash
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Maroon;
-            this.ClientSize = new System.Drawing.Size(400, 369);
+            this.ClientSize = new System.Drawing.Size(300, 300);
             this.ControlBox = false;
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -98,11 +95,10 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(400, 3692);
+            this.MaximumSize = new System.Drawing.Size(300, 3000);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(400, 369);
+            this.MinimumSize = new System.Drawing.Size(300, 300);
             this.Name = "Splash";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

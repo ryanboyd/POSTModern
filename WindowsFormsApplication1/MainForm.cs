@@ -22,7 +22,7 @@ namespace WindowsFormsApplication1
 
 
         //initialize the space for our dictionary data
-        DictionaryData DictData = new DictionaryData();
+        BackgroundWorkerData BGData = new BackgroundWorkerData();
 
 
 
@@ -89,29 +89,34 @@ namespace WindowsFormsApplication1
         {
 
 
-
+            if (!uint.TryParse(SegmentTextbox.Text, out uint n) || int.Parse(SegmentTextbox.Text) < 1)
+            {
+                MessageBox.Show("Your selected number of segments must be a postive integer (i.e., a whole number greater than zero).", "Segmentation Selection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             FolderBrowser.Description = "Please choose the location of your .txt files to analyze";
             if (FolderBrowser.ShowDialog() != DialogResult.Cancel) {
 
-                DictData.TextFileFolder = FolderBrowser.SelectedPath.ToString();
+                BGData.TextFileFolder = FolderBrowser.SelectedPath.ToString();
 
-                if (DictData.TextFileFolder != "")
+                if (BGData.TextFileFolder != "")
                 {
 
                     saveFileDialog.FileName = "POSTModern_Results.csv";
 
-                    saveFileDialog.InitialDirectory = DictData.TextFileFolder;
+                    saveFileDialog.InitialDirectory = BGData.TextFileFolder;
                     if (saveFileDialog.ShowDialog() != DialogResult.Cancel) {
 
 
-                        DictData.OutputFileLocation = saveFileDialog.FileName;
-                        DictData.SelectedModel = ModelSelectionBox.SelectedItem.ToString();
-                        DictData.OutputTaggedText = SavePOStextCheckbox.Checked;
-                        DictData.OrderedPOSTagText = IncludeOrderedPOSTagsCheckbox.Checked;
-                        DictData.NormalizeOutput = NormalizeOutputCheckbox.Checked;
+                        BGData.OutputFileLocation = saveFileDialog.FileName;
+                        BGData.SelectedModel = ModelSelectionBox.SelectedItem.ToString();
+                        BGData.OutputTaggedText = SavePOStextCheckbox.Checked;
+                        BGData.OrderedPOSTagText = IncludeOrderedPOSTagsCheckbox.Checked;
+                        BGData.NormalizeOutput = NormalizeOutputCheckbox.Checked;
+                        BGData.NumSegments = int.Parse(SegmentTextbox.Text);
 
-                        if (DictData.OutputFileLocation != "") {
+                        if (BGData.OutputFileLocation != "") {
 
 
                             StartButton.Enabled = false;
@@ -121,8 +126,9 @@ namespace WindowsFormsApplication1
                             SavePOStextCheckbox.Enabled = false;
                             IncludeOrderedPOSTagsCheckbox.Enabled = false;
                             NormalizeOutputCheckbox.Enabled = false;
+                            SegmentTextbox.Enabled = false;
 
-                            BgWorker.RunWorkerAsync(DictData);
+                            BgWorker.RunWorkerAsync(BGData);
                         }
                     }
                 }
@@ -142,7 +148,7 @@ namespace WindowsFormsApplication1
         {
 
 
-            DictionaryData DictData = (DictionaryData)e.Argument;
+            BackgroundWorkerData BGData = (BackgroundWorkerData)e.Argument;
 
 
             //report what we're working on
@@ -170,13 +176,13 @@ namespace WindowsFormsApplication1
             {
                 SearchDepth = SearchOption.AllDirectories;
             }
-            var files = Directory.EnumerateFiles(DictData.TextFileFolder, "*.txt", SearchDepth);
+            var files = Directory.EnumerateFiles(BGData.TextFileFolder, "*.txt", SearchDepth);
 
 
 
             try {
 
-                var tagger = new MaxentTagger(modelsDirectory + @"/" + DictData.SelectedModel);
+                var tagger = new MaxentTagger(modelsDirectory + @"/" + BGData.SelectedModel);
 
                 int NumberOfTagsInModel = tagger.numTags();
 
@@ -199,17 +205,17 @@ namespace WindowsFormsApplication1
 
 
                 //open up the output file
-                using (StreamWriter outputFile = new StreamWriter(new FileStream(DictData.OutputFileLocation, FileMode.Create), SelectedEncoding))
+                using (StreamWriter outputFile = new StreamWriter(new FileStream(BGData.OutputFileLocation, FileMode.Create), SelectedEncoding))
                 {
 
                     
 
                         //write the header row to the output file
                         StringBuilder HeaderString = new StringBuilder();
-                        HeaderString.Append("\"Filename\",\"TokenCount\",\"SentenceCount\"," + string.Join(",", tags_list_header.ToArray()));
+                        HeaderString.Append("\"Filename\",\"Segment\",\"TokenCount\",\"SentenceCount\"," + string.Join(",", tags_list_header.ToArray()));
 
-                        if (DictData.OutputTaggedText) HeaderString.Append(",\"TaggedText\"");
-                        if (DictData.OrderedPOSTagText) HeaderString.Append(",\"OrderedPOSTags\"");
+                        if (BGData.OutputTaggedText) HeaderString.Append(",\"TaggedText\"");
+                        if (BGData.OrderedPOSTagText) HeaderString.Append(",\"OrderedPOSTags\"");
 
                         outputFile.WriteLine(HeaderString.ToString());
                 
@@ -237,11 +243,41 @@ namespace WindowsFormsApplication1
 
                             var sentences = MaxentTagger.tokenizeText(new java.io.StringReader(InputText)).toArray();
 
-                            int TotalSentences = sentences.Length;
-                            int TotalWC = 0;
 
-                            StringBuilder TaggedText = new StringBuilder();
-                            StringBuilder OrderedPOSTags = new StringBuilder();
+                            
+                            //now that we know how many sentences we have, we can figure out the segmentation
+                            double SentencesPerSegment = 1.0;
+                            int NumberOfSegments = BGData.NumSegments;
+                            if (NumberOfSegments > sentences.Length) NumberOfSegments = sentences.Length;
+
+                            if (sentences.Length > 0) SentencesPerSegment = sentences.Length / (double)NumberOfSegments;
+
+
+                             List<List<ArrayList>> Sentences_Segmented = new List<List<ArrayList>>();
+
+                            int SegmentCounter = 1;
+                            //int SentenceNumberTracker = 0;
+                            for (int i = 0; i < sentences.Length; i++)
+                            {
+
+                                if (Sentences_Segmented.Count < SegmentCounter) Sentences_Segmented.Add(new List<ArrayList>());
+
+                                Sentences_Segmented[SegmentCounter - 1].Add((ArrayList)sentences[i]);
+                                //SentenceNumberTracker++;
+
+                                if (i + 1 >= SegmentCounter * SentencesPerSegment)
+                                {
+                                    SegmentCounter++;
+                                    //SentenceNumberTracker = 0;
+                                }
+                                
+                            }
+
+
+                            sentences = null;
+
+
+
 
 
                             //     _                _                 _____         _   
@@ -251,93 +287,110 @@ namespace WindowsFormsApplication1
                             // /_/   \_\_| |_|\__,_|_|\__, /___\___|   |_|\___/_/\_\\__|
                             //                        |___/                             
 
-                            foreach (ArrayList sentence in sentences)
+
+
+
+                            for (int i = 0; i < NumberOfSegments; i++) { 
+
+
+                                StringBuilder TaggedText = new StringBuilder();
+                                StringBuilder OrderedPOSTags = new StringBuilder();
+
+                                int TotalSentences = Sentences_Segmented[i].Count;
+                                int TotalWC = 0;
+
+
+                                foreach (ArrayList sentence in Sentences_Segmented[i])
                                 {
-                                var taggedSentence = tagger.tagSentence(sentence);
 
 
-                                Iterator it = taggedSentence.iterator();                           
+                                    
+                                    var taggedSentence = tagger.tagSentence(sentence);
+
+
+                                    Iterator it = taggedSentence.iterator();                           
 
                                   
  
                                 
 
-                                while (it.hasNext())
-                                {
+                                    while (it.hasNext())
+                                    {
 
 
-                                    TaggedWord token = (TaggedWord)it.next();
+                                        TaggedWord token = (TaggedWord)it.next();
 
-                                    if (DictData.OutputTaggedText) TaggedText.Append(token.toString() + " ");
-                                    if (DictData.OrderedPOSTagText) OrderedPOSTags.Append(token.tag() + " ");
+                                        if (BGData.OutputTaggedText) TaggedText.Append(token.toString() + " ");
+                                        if (BGData.OrderedPOSTagText) OrderedPOSTags.Append(token.tag() + " ");
 
 
-                                    POSSums[token.tag()] += 1;
-                                    TotalWC += 1;
+                                        POSSums[token.tag()] += 1;
+                                        TotalWC += 1;
                                     
-                                    //MessageBox.Show(token.word());  
+                                        //MessageBox.Show(token.word());  
                                     
 
+                                    }
+
+                                    TaggedText.Append(Environment.NewLine);
+                                    OrderedPOSTags.Append(Environment.NewLine);
+
                                 }
 
-                                TaggedText.Append(Environment.NewLine);
-                                OrderedPOSTags.Append(Environment.NewLine);
-
-                        }
 
 
 
 
 
 
-
-                            // __        __    _ _          ___        _               _   
-                            // \ \      / / __(_) |_ ___   / _ \ _   _| |_ _ __  _   _| |_ 
-                            //  \ \ /\ / / '__| | __/ _ \ | | | | | | | __| '_ \| | | | __|
-                            //   \ V  V /| |  | | ||  __/ | |_| | |_| | |_| |_) | |_| | |_ 
-                            //    \_/\_/ |_|  |_|\__\___|  \___/ \__,_|\__| .__/ \__,_|\__|
-                            //                                            |_|              
-
+                                // __        __    _ _          ___        _               _   
+                                // \ \      / / __(_) |_ ___   / _ \ _   _| |_ _ __  _   _| |_ 
+                                //  \ \ /\ / / '__| | __/ _ \ | | | | | | | __| '_ \| | | | __|
+                                //   \ V  V /| |  | | ||  __/ | |_| | |_| | |_| |_) | |_| | |_ 
+                                //    \_/\_/ |_|  |_|\__\___|  \___/ \__,_|\__| .__/ \__,_|\__|
+                                //                                            |_|              
 
 
 
-                            string[] OutputString = new string[3];
-                            OutputString[0] = "\"" + Filename_Clean + "\"";
-                            OutputString[1] = TotalWC.ToString();
-                            OutputString[2] = TotalSentences.ToString();
 
-                            int include_tagged_text = 0;
-                            int include_ordered_pos = 0;
-                            if (DictData.OutputTaggedText) include_tagged_text = 1;
-                            if (DictData.OrderedPOSTagText) include_ordered_pos = 1;
+                                string[] OutputString = new string[4];
+                                OutputString[0] = "\"" + Filename_Clean + "\"";
+                                OutputString[1] = (i + 1).ToString();
+                                OutputString[2] = TotalWC.ToString();
+                                OutputString[3] = TotalSentences.ToString();
 
-                            string[] TagOutputString = new string[NumberOfTagsInModel + include_tagged_text + include_ordered_pos];
+                                int include_tagged_text = 0;
+                                int include_ordered_pos = 0;
+                                if (BGData.OutputTaggedText) include_tagged_text = 1;
+                                if (BGData.OrderedPOSTagText) include_ordered_pos = 1;
 
-                            for(int i = 0; i < NumberOfTagsInModel; i++)
-                            {
-                                if (DictData.NormalizeOutput && TotalWC > 0)
+                                string[] TagOutputString = new string[NumberOfTagsInModel + include_tagged_text + include_ordered_pos];
+
+                                for(int j = 0; j < NumberOfTagsInModel; j++)
                                 {
-                                    TagOutputString[i] = RoundUp(POSSums[tags_array[i]] * 100 / (double)TotalWC, 5).ToString();
-                                }
-                                else
-                                {
-                                    TagOutputString[i] = POSSums[tags_array[i]].ToString();
-                                }
+                                    if (BGData.NormalizeOutput && TotalWC > 0)
+                                    {
+                                        TagOutputString[j] = RoundUp(POSSums[tags_array[j]] * 100 / (double)TotalWC, 5).ToString();
+                                    }
+                                    else
+                                    {
+                                        TagOutputString[j] = POSSums[tags_array[j]].ToString();
+                                    }
                                         
+                                }
+
+                                if (BGData.OutputTaggedText) TagOutputString[TagOutputString.Length - include_tagged_text - include_ordered_pos] = "\"" +TaggedText.ToString().Replace("\"", "\"\"") + "\"";
+                                if (BGData.OrderedPOSTagText) TagOutputString[TagOutputString.Length - include_ordered_pos] = "\"" + OrderedPOSTags.ToString().Replace("\"", "\"\"") + "\"";
+
+                                outputFile.WriteLine(String.Join(",", MergeOutputArrays(OutputString, TagOutputString)));
+
+
+
                             }
 
-                            if (DictData.OutputTaggedText) TagOutputString[TagOutputString.Length - include_tagged_text - include_ordered_pos] = "\"" +TaggedText.ToString().Replace("\"", "\"\"") + "\"";
-                            if (DictData.OrderedPOSTagText) TagOutputString[TagOutputString.Length - include_ordered_pos] = "\"" + OrderedPOSTags.ToString().Replace("\"", "\"\"") + "\"";
-
-                            outputFile.WriteLine(String.Join(",", MergeOutputArrays(OutputString, TagOutputString)));
 
 
-
-
-
-
-
-
+                        //end of the "for each file" loop
                         }
 
 
@@ -345,6 +398,10 @@ namespace WindowsFormsApplication1
 
                 }
 
+            }
+            catch (OutOfMemoryException OOM)
+            {
+                MessageBox.Show("One or more of your files caused an Out of Memory error. This means that you do not have enough RAM to process the current file. This is often caused by extremely complex / messy language samples with run-on sentences or other peculiar constructions, paired with a computer that does not have enough RAM to handle such processing.", "Out of Memory", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch
             {
@@ -366,6 +423,7 @@ namespace WindowsFormsApplication1
             SavePOStextCheckbox.Enabled = true;
             IncludeOrderedPOSTagsCheckbox.Enabled = true;
             NormalizeOutputCheckbox.Enabled = true;
+            SegmentTextbox.Enabled = true;
             FilenameLabel.Text = "Finished!";
             MessageBox.Show("POSTModern has finished analyzing your texts.", "Analysis Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -376,7 +434,7 @@ namespace WindowsFormsApplication1
 
 
 
-        public class DictionaryData
+        public class BackgroundWorkerData
         {
 
             public string TextFileFolder { get; set; }
@@ -385,6 +443,7 @@ namespace WindowsFormsApplication1
             public bool OutputTaggedText { get; set; }
             public bool OrderedPOSTagText { get; set; }
             public bool NormalizeOutput { get; set; }
+            public int NumSegments { get; set; }
 
         }
 
