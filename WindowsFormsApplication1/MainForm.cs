@@ -225,9 +225,7 @@ namespace WindowsFormsApplication1
 
                             //set up our variables to report
                             string Filename_Clean = Path.GetFileName(fileName);
-                            Dictionary<string, int> POSSums = new Dictionary<string, int>();
-
-                            for (int i = 0; i < NumberOfTagsInModel; i++) POSSums.Add(tags_array[i], 0);
+                            
 
                             //report what we're working on
                             FilenameLabel.Invoke((MethodInvoker)delegate
@@ -290,7 +288,11 @@ namespace WindowsFormsApplication1
 
 
 
-                            for (int i = 0; i < NumberOfSegments; i++) { 
+                            for (int i = 0; i < NumberOfSegments; i++) {
+
+
+                                Dictionary<string, int> POSSums = new Dictionary<string, int>();
+                                for (int j = 0; j < NumberOfTagsInModel; j++) POSSums.Add(tags_array[j], 0);
 
 
                                 StringBuilder TaggedText = new StringBuilder();
